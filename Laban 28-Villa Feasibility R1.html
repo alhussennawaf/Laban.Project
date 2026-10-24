@@ -1,0 +1,609 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Laban 28-Villa Feasibility</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sticky assumptions rail on the left, results column on the right; stacks to one column on phones.
+   Palette from the Jadah Al Khozama identity manual: navy, coral, slate, charcoal, ice blue. */
+:root{
+  --bg:#F0F4F8; --surface:#FFFFFF; --sunk:#E6ECF3; --ink:#1A202C; --muted:#507290; --line:#D3DCE7;
+  --navy:#2B4C7E; --coral:#E77E66; --slate:#5D7290;
+  --p1:#2B4C7E; --p2:#E77E66; --r:#8AA4BF;
+  --good:#2F7D5B; --good-bg:#E2F2EA; --bad:#B8432F; --bad-bg:#FBE7E2; --warn:#9A6A12; --warn-bg:#FBF1DC;
+  --road:#E3E8EF; --green:#DCE9DD;
+  --display:"Lora", Georgia, "Times New Roman", serif;
+  --body:"Manrope", Arial, "Helvetica Neue", sans-serif;
+  --r-sm:4px; --r-md:8px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F151E; --surface:#17202C; --sunk:#1E2936; --ink:#E5EBF2; --muted:#93A9C0; --line:#2B3848;
+  --navy:#86A8DA; --coral:#F09A85; --slate:#A3B4C8;
+  --p1:#6F96D1; --p2:#EE8C74; --r:#7E93A8;
+  --good:#6CC59B; --good-bg:#16312A; --bad:#F08E7A; --bad-bg:#3A1F1A; --warn:#E6BE6A; --warn-bg:#352B15;
+  --road:#1C2532; --green:#1B2A22; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F151E; --surface:#17202C; --sunk:#1E2936; --ink:#E5EBF2; --muted:#93A9C0; --line:#2B3848;
+  --navy:#86A8DA; --coral:#F09A85; --slate:#A3B4C8;
+  --p1:#6F96D1; --p2:#EE8C74; --r:#7E93A8;
+  --good:#6CC59B; --good-bg:#16312A; --bad:#F08E7A; --bad-bg:#3A1F1A; --warn:#E6BE6A; --warn-bg:#352B15;
+  --road:#1C2532; --green:#1B2A22; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;color:var(--navy)}
+h1{font-size:clamp(22px,3vw,30px);font-weight:700;line-height:1.15}
+h2{font-size:18px;font-weight:600}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.sub{color:var(--muted);font-size:13px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:flex-end;justify-content:space-between;border-bottom:2px solid var(--navy);padding-bottom:16px}
+.top .id{display:grid;gap:6px;min-width:0}
+.presets{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:600 13px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer}
+.chip:hover{border-color:var(--navy)}
+.chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--surface)}
+.chip.custom{cursor:default;border-style:dashed;color:var(--muted)}
+.chip.custom[aria-pressed="true"]{background:var(--coral);border-color:var(--coral);color:#fff;border-style:solid}
+button:focus-visible,input:focus-visible,.villa:focus-visible,.seg-btn:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+
+.layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}}
+
+/* assumptions rail */
+.rail{position:sticky;top:max(12px,env(safe-area-inset-top,0px));background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:18px;display:grid;gap:18px;max-height:calc(100vh - 24px);overflow:auto}
+@media (max-width:900px){.rail{position:static;max-height:none}}
+.group{display:grid;gap:12px}
+.group h3{font-size:14px;color:var(--coral);font-family:var(--body);font-weight:700;letter-spacing:.02em}
+.ctl{display:grid;gap:4px}
+.ctl .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ctl label{font-size:13px;font-weight:600}
+.ctl label .tag{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:1px}
+.ctl output{font-weight:700;font-variant-numeric:tabular-nums;color:var(--navy);font-size:13px;white-space:nowrap}
+.ctl .hint{font-size:11.5px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--navy);margin:2px 0}
+.toggle{display:flex;gap:10px;align-items:flex-start;font-size:12.5px}
+.toggle input{margin-top:3px;accent-color:var(--coral)}
+.reset{font:600 12px var(--body);background:none;border:1px solid var(--line);color:var(--muted);border-radius:var(--r-sm);padding:6px 10px;cursor:pointer;justify-self:start}
+.reset:hover{color:var(--navy);border-color:var(--navy)}
+
+/* results */
+.main{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;min-width:0}
+.main>*,.two>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:18px;min-width:0}
+.card-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 16px;margin-bottom:14px}
+.verdict{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:14px 18px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
+.pill{font:700 12px var(--body);padding:4px 10px;border-radius:999px;letter-spacing:.02em;white-space:nowrap}
+.pill.good{background:var(--good-bg);color:var(--good)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.warn{background:var(--warn-bg);color:var(--warn)}
+.verdict p{margin:0;flex:1 1 320px;min-width:0}
+
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.kpi{background:var(--surface);padding:14px 16px;display:grid;gap:2px;align-content:start}
+.kpi .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpi .v{font-family:var(--display);font-size:24px;white-space:nowrap;font-weight:600;color:var(--navy);font-variant-numeric:tabular-nums lining-nums;line-height:1.2}
+.kpi .d{font-size:12px;color:var(--muted)}
+.kpi .d b{font-weight:700}
+.kpi.hero .v{color:var(--ink)}
+@media (max-width:560px){.kpi{padding:12px}.kpi .v{font-size:19px}.kpi .k{font-size:10px;letter-spacing:.05em}}
+.villa text.vs{font-size:9px;font-weight:500;opacity:.92}
+.up{color:var(--good)} .down{color:var(--bad)}
+
+.two{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:20px}
+@media (max-width:1100px){.two{grid-template-columns:minmax(0,1fr)}}
+
+/* site plan */
+.plan svg{width:100%;height:auto;display:block;max-height:560px}
+.villa rect{stroke:var(--surface);stroke-width:2;cursor:pointer;transition:opacity .15s}
+.villa text{pointer-events:none;fill:#fff;font-family:var(--body)}
+.villa:hover rect{opacity:.85}
+.villa.sel rect{stroke:var(--ink);stroke-width:3}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:2px;display:inline-block}
+.vdetail{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px 16px;background:var(--sunk);border-radius:var(--r-sm);padding:12px 14px}
+.vdetail div{display:grid}
+.vdetail span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.vdetail b{font-variant-numeric:tabular-nums;font-size:15px}
+
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:13px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;text-align:right;padding:8px 10px;border-bottom:2px solid var(--navy);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+tr.tot td{font-weight:700;border-top:2px solid var(--line);border-bottom:none}
+.scroll{overflow-x:auto}
+.segdot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px}
+td.you,th.you{background:var(--sunk)}
+th.you{color:var(--coral)}
+
+.chart svg{width:100%;height:auto;display:block}
+.chart .axis{fill:var(--muted);font-size:11px;font-family:var(--body)}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .zero{stroke:var(--muted);stroke-width:1}
+.tt{font-size:12.5px;color:var(--muted);min-height:20px;margin-top:6px}
+.tt b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+.seg-switch{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg-btn{font:600 12px var(--body);padding:5px 12px;background:var(--surface);color:var(--muted);border:0;cursor:pointer}
+.seg-btn[aria-pressed="true"]{background:var(--navy);color:var(--surface)}
+
+.grid5{display:grid;grid-template-columns:auto repeat(5,minmax(0,1fr));gap:3px;font-variant-numeric:tabular-nums;font-size:13px}
+.grid5 .h{font-size:11px;color:var(--muted);font-weight:700;text-align:center;padding:4px 0}
+.grid5 .rh{font-size:12px;color:var(--muted);font-weight:700;padding:0 10px 0 0;display:flex;align-items:center;justify-content:flex-end}
+.grid5 .c{text-align:center;padding:10px 2px;border-radius:var(--r-sm);font-weight:600}
+.grid5 .c.base{outline:2px solid var(--ink);outline-offset:-2px}
+.note{font-size:12px;color:var(--muted);margin:10px 0 0}
+.bridge-row{display:grid;grid-template-columns:170px minmax(0,1fr) 92px;gap:10px;align-items:center;font-size:13px;padding:3px 0}
+.bridge-row .lab{color:var(--ink)}
+.bridge-row .bar{height:16px;position:relative}
+.bridge-row .bar i{position:absolute;top:0;bottom:0;border-radius:2px}
+.bridge-row .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+@media (max-width:520px){.bridge-row{grid-template-columns:110px minmax(0,1fr) 78px;font-size:12px}}
+footer{overflow-wrap:anywhere;min-width:0;font-size:12px;color:var(--muted);display:grid;gap:4px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<div class="wrap">
+  <header class="top">
+    <div class="id">
+      <span class="eyebrow">Jadah Al Khozama · Laban District, West Riyadh · Option 5</span>
+      <h1>Laban Town House Compound: 28 villas with common basement</h1>
+      <span class="sub">Feasibility model R6 · land 5,656.85 m² · 4,010.91 m² of saleable villa plots · prices in SAR per m² of plot area</span>
+    </div>
+    <div class="presets" role="group" aria-label="Scenario">
+      <button class="chip" id="pre-pess" data-p="pess" aria-pressed="false">Pessimistic</button>
+      <button class="chip" id="pre-ml" data-p="ml" aria-pressed="true">Most Likely</button>
+      <button class="chip" id="pre-opt" data-p="opt" aria-pressed="false">Optimistic</button>
+      <span class="chip custom" id="pre-custom" aria-pressed="false">Custom</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="rail" aria-label="Assumptions">
+      <div class="group">
+        <h3>Selling price by segment</h3>
+        <div class="ctl"><div class="row"><label for="p1"><span class="tag" style="background:var(--p1)"></span>P1 · corner + main road</label><output id="o-p1" for="p1"></output></div>
+          <input type="range" id="p1" min="12000" max="19000" step="250"><span class="hint" id="h-P1"></span></div>
+        <div class="ctl"><div class="row"><label for="p2"><span class="tag" style="background:var(--p2)"></span>P2 · main road</label><output id="o-p2" for="p2"></output></div>
+          <input type="range" id="p2" min="12000" max="19000" step="250"><span class="hint" id="h-P2"></span></div>
+        <div class="ctl"><div class="row"><label for="r"><span class="tag" style="background:var(--r)"></span>R · regular</label><output id="o-r" for="r"></output></div>
+          <input type="range" id="r" min="12000" max="19000" step="250"><span class="hint" id="h-R"></span></div>
+      </div>
+      <div class="group">
+        <h3>Cost</h3>
+        <div class="ctl"><div class="row"><label for="cv">Construction cost vs R5 estimate</label><output id="o-cv" for="cv"></output></div>
+          <input type="range" id="cv" min="-0.15" max="0.25" step="0.025"><span class="hint">Buildings + common works; contingency and JAK fee follow</span></div>
+        <div class="ctl"><div class="row"><label for="land">Land rate</label><output id="o-land" for="land"></output></div>
+          <input type="range" id="land" min="2500" max="5000" step="100"><span class="hint">SAR/m² of land, plus 5% RETT</span></div>
+        <div class="ctl"><div class="row"><label for="mkt">Marketing &amp; commission</label><output id="o-mkt" for="mkt"></output></div>
+          <input type="range" id="mkt" min="0.02" max="0.08" step="0.005"><span class="hint">% of sales value</span></div>
+      </div>
+      <div class="group">
+        <h3>Programme &amp; sales speed</h3>
+        <div class="ctl"><div class="row"><label for="dur">Construction duration</label><output id="o-dur" for="dur"></output></div>
+          <input type="range" id="dur" min="12" max="24" step="1"><span class="hint">Starts month 7, after 5 months design + 1 approvals</span></div>
+        <div class="ctl"><div class="row"><label for="lag">Sales start after handover</label><output id="o-lag" for="lag"></output></div>
+          <input type="range" id="lag" min="0" max="9" step="1"><span class="hint">Brief: sale only after 100% completion</span></div>
+        <div class="ctl"><div class="row"><label for="abs">Time to sell all 28 villas</label><output id="o-abs" for="abs"></output></div>
+          <input type="range" id="abs" min="2" max="18" step="1"></div>
+      </div>
+      <button class="reset" id="reset" type="button">Reset to Most Likely</button>
+    </aside>
+
+    <main class="main">
+      <div class="verdict" id="verdict"></div>
+      <div class="kpis" id="kpis"></div>
+
+      <div class="two">
+        <section class="card plan">
+          <div class="card-h"><h2>Site plan &amp; villa prices</h2><span class="sub">Each plot shows villa no., plot area, cost (C) and price (P) in SAR m</span></div>
+          <svg id="plan" viewBox="14 18 438 632" role="img" aria-label="Schematic site plan with 28 villas coloured by price segment"></svg>
+          <div class="legend"><span><i style="background:var(--p1)"></i>P1 premium: corner + main road</span><span><i style="background:var(--p2)"></i>P2 premium: main road</span><span><i style="background:var(--r)"></i>R regular</span><span>Schematic, not to scale</span></div>
+          <div class="vdetail" id="vdetail"></div>
+        </section>
+        <section class="card">
+          <div class="card-h"><h2>Where the money goes</h2><span class="sub">Current case, SAR m</span></div>
+          <div id="bridge"></div>
+          <h2 style="margin-top:22px;margin-bottom:10px">Revenue by segment</h2>
+          <div class="scroll"><table id="segtbl"></table></div>
+          <p class="note" id="premnote"></p>
+        </section>
+      </div>
+
+      <section class="card chart">
+        <div class="card-h"><h2>Cash flow: the equity J-curve</h2><span class="sub">Cumulative net cash, SAR m · solid = current case, dashed = the three scenarios</span></div>
+        <svg id="jcurve" viewBox="0 0 760 290" role="img" aria-label="Cumulative cash flow by month"></svg>
+        <div class="tt" id="jtt">Hover or tap the chart to read a month.</div>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h2>Scenario comparison</h2><span class="sub">The three fixed scenarios beside your current settings · SAR m</span></div>
+        <div class="scroll"><table id="cmp"></table></div>
+      </section>
+
+      <div class="two">
+        <section class="card chart">
+          <div class="card-h"><h2>Which risk matters most</h2>
+            <div class="seg-switch" role="group" aria-label="Measure"><button class="seg-btn" id="tm-profit" aria-pressed="true">Net profit</button><button class="seg-btn" id="tm-irr" aria-pressed="false">IRR</button></div></div>
+          <svg id="tornado" viewBox="0 0 520 250" role="img" aria-label="Tornado chart of risk impacts"></svg>
+          <p class="note">Each bar flexes one risk around the current case. Timing risks change IRR but not profit, because the project has no debt and no holding costs are modelled.</p>
+        </section>
+        <section class="card">
+          <div class="card-h"><h2>Discount to sell faster?</h2><span class="sub">Project IRR by price change and sell-out period</span></div>
+          <div class="grid5" id="irrgrid"></div>
+          <p class="note">Outlined cell = current case. Navy cells clear the 15% IRR target; coral cells fall short. Compare a cell with the one up and to the left: a lower price but a faster sale.</p>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="card-h"><h2>Villa price list</h2><span class="sub">Cost allocated on R5 Option 5 cost shares · marketing at its own price</span></div>
+        <div class="scroll"><table id="vtbl"></table></div>
+      </section>
+
+      <footer>
+        <span>Source: 05_Laban_Feasibility_Study_NVD_19102026_R5_28_VILLA_Scenarios.xlsx (revised 19-Oct-2026: updated plot areas for villas 10, 11 and 19–22; common basement of 1,953.15 m² spread over 28 villas). The Most Likely case reconciles to the workbook (net profit SAR 14,984,243).</span>
+        <span>100% equity, no debt. Costs are VAT-inclusive. Zakat and RETT on unit sales are excluded. Land is paid in month 1, construction spend follows an S-curve, and sales are spread evenly after handover. NPV is discounted at 10% a year, IRR is annualised from monthly flows, and the targets are 20% ROI and 15% IRR.</span>
+        <span>Prepared by NVD Freelancing &amp; Consultants for owner decision-making. The site plan is schematic.</span>
+      </footer>
+    </main>
+  </div>
+</div>
+<script>
+// ---- Laban 28-villa feasibility engine (mirrors R6 workbook logic) ----
+const LAND_AREA = 5656.85, RETT = 0.05;
+const RATE_AG = 1900, RATE_BS = 1350;
+const BSMT_TOTAL = 1953.15, BSMT_PER = 1953.15 / 28;      // revised: common basement spread over 28 villas
+const COMMON_WORKS = 613782, UTIL = 420000;              // C excl. utilities, utilities
+const CONT = 0.03, DEVFEE = 0.10;
+const F_DESIGN = 276800, F_SUPERV = 100000, F_APPROV = 40000, F_SURVEY = 15000, F_INSUR = 150000;
+const DESIGN_M = 5, APPROV_M = 1, COMMON_LAST = 6, HORIZON = 72;
+const DISC = 0.10, T_ROI = 0.20, T_IRR = 0.15, MARKET = 15000;
+// villa: [no, type, segment, plot m2]
+const VILLAS = [[1,"B","P1",148.8],[2,"B","P1",148.8],[3,"B","P1",148.8],[4,"B","P1",158.1],[5,"B","P1",155.73],[6,"B'","P1",150.28],
+[7,"A","P2",130.78],[8,"A","P2",131],[9,"A","P2",131],[10,"A","P2",131],[11,"A","P1",154.98],[12,"B","P2",144.3],
+[13,"B","P2",137.27],[14,"B","P2",137.27],[15,"B","P2",137.27],[16,"B","P2",137.27],[17,"B","P2",137.27],[18,"B","P1",227.53],
+[19,"C","P1",156.24],[20,"A","P1",154.98],[21,"C","R",132.06],[22,"A","R",131],[23,"C","R",132.06],[24,"A","R",131],
+[25,"C","R",132.06],[26,"A","R",131],[27,"C","P2",132.06],[28,"A","P2",131]];
+const PLOT_TOTAL = VILLAS.reduce((s, v) => s + v[3], 0);
+const GFA_TOTAL = PLOT_TOTAL * 2.2;
+const BUILD_BASE = GFA_TOTAL * RATE_AG + 28 * BSMT_PER * RATE_BS;
+const BSMT_FIX = (BSMT_TOTAL - 28 * BSMT_PER) * RATE_BS;
+// R5 per-villa cost-before-marketing shares (Option 5 cols L..Q)
+const VSHARE = (() => {
+  const landBase = 3500 * LAND_AREA * (1 + RETT);
+  const constrSub = BUILD_BASE + COMMON_WORKS + UTIL;
+  const soft = F_DESIGN + F_SUPERV + F_APPROV + F_SURVEY + F_INSUR + DEVFEE * constrSub;
+  const c = VILLAS.map(v => {
+    const sh = v[3] / PLOT_TOTAL;
+    const L = v[3] * 2.2 * RATE_AG + BSMT_PER * RATE_BS, M = 15000, N = COMMON_WORKS * sh;
+    return L + M + N + CONT * (L + M + N) + soft * (L + M + N) / constrSub + landBase * sh;
+  });
+  const t = c.reduce((a, b) => a + b, 0);
+  return c.map(x => x / t);
+})();
+
+const PRESETS = {
+  pess: { name: "Pessimistic", p1: 15000, p2: 14500, r: 14250, cv: 0.05, dur: 18, lag: 2, abs: 12, mkt: 0.05, land: 3500, bfix: false },
+  ml:   { name: "Most Likely", p1: 16000, p2: 15500, r: 15000, cv: 0, dur: 15, lag: 0, abs: 6, mkt: 0.05, land: 3500, bfix: false },
+  opt:  { name: "Optimistic", p1: 17000, p2: 16250, r: 15500, cv: -0.025, dur: 15, lag: 0, abs: 4, mkt: 0.05, land: 3500, bfix: false },
+};
+
+function irrMonthly(cf) {
+  const npv = r => cf.reduce((s, c, i) => s + c / Math.pow(1 + r, i), 0);
+  let lo = -0.5, hi = 1;
+  if (npv(lo) * npv(hi) > 0) return NaN;
+  for (let k = 0; k < 200; k++) { const m = (lo + hi) / 2; if (npv(lo) * npv(m) <= 0) hi = m; else lo = m; }
+  return (lo + hi) / 2;
+}
+
+// a: inputs; opts: {pf, cf, lf, delay, absOverride} for sensitivity
+function run(a, o = {}) {
+  const pf = 1 + (o.pf || 0), cfac = 1 + (o.cf || 0), lfac = 1 + (o.lf || 0);
+  const abs = o.abs || a.abs, delay = o.delay || 0;
+  const rate = { P1: a.p1 * pf, P2: a.p2 * pf, R: a.r * pf };
+  const seg = { P1: { n: 0, area: 0, gdv: 0 }, P2: { n: 0, area: 0, gdv: 0 }, R: { n: 0, area: 0, gdv: 0 } };
+  VILLAS.forEach(v => { const s = seg[v[2]]; s.n++; s.area += v[3]; s.gdv += v[3] * rate[v[2]]; });
+  const gdv = seg.P1.gdv + seg.P2.gdv + seg.R.gdv;
+  const v = 1 + a.cv;
+  const land = a.land * LAND_AREA * (1 + RETT) * lfac;
+  const build = (BUILD_BASE + (a.bfix ? BSMT_FIX : 0)) * v * cfac;
+  const common = COMMON_WORKS * v * cfac, util = UTIL * v * cfac;
+  const sub = build + common + util;
+  const cont = CONT * sub, fee = DEVFEE * sub;
+  const fixed = F_DESIGN + F_SUPERV + F_APPROV + F_SURVEY + F_INSUR;
+  const preMkt = land + sub + cont + fee + fixed;
+  const mkt = a.mkt * gdv, tdc = preMkt + mkt, profit = gdv - tdc;
+  // timing (month numbers 1-based)
+  const cs = DESIGN_M + APPROV_M + 1, ce = cs + a.dur - 1, ho = ce + 1;
+  const fs = ho + a.lag + delay, ls = fs + abs - 1, cw = Math.max(1, Math.min(COMMON_LAST, a.dur));
+  const out = [], inn = [];
+  for (let m = 1; m <= HORIZON; m++) {
+    const dW = m <= DESIGN_M ? 1 / DESIGN_M : 0;
+    const cF = m >= cs && m <= ce ? 1 : 0;
+    const sW = cF ? (Math.cos(Math.PI * (m - cs) / a.dur) - Math.cos(Math.PI * (m - cs + 1) / a.dur)) / 2 : 0;
+    const cwW = m > ce - cw && m <= ce ? 1 / cw : 0;
+    const saW = m >= fs && m <= ls ? 1 / abs : 0;
+    let o_ = 0;
+    if (m === 1) o_ += land + F_SURVEY;
+    o_ += F_DESIGN * dW;
+    if (m === Math.max(1, DESIGN_M + APPROV_M)) o_ += F_APPROV;
+    o_ += build * sW + common * cwW + (m === ce ? util : 0) + cont * sW;
+    o_ += (F_SUPERV + fee) * cF / a.dur;
+    if (m === cs) o_ += F_INSUR;
+    o_ += mkt * saW;
+    out.push(o_); inn.push(gdv * saW);
+  }
+  const net = inn.map((x, i) => x - out[i]);
+  let cum = 0, minCum = 0, peakM = 1, payback = null; const cumArr = [];
+  net.forEach((x, i) => { const prev = cum; cum += x; cumArr.push(cum); if (cum < minCum) { minCum = cum; peakM = i + 1; } if (prev < 0 && cum >= 0 && payback === null) payback = i + 1; });
+  let c2 = 0, minX = 0; net.forEach((x, i) => { c2 += x + (i === 0 ? land : 0); if (c2 < minX) minX = c2; });
+  const im = irrMonthly(net), irr = Math.pow(1 + im, 12) - 1;
+  const rm = Math.pow(1 + DISC, 1 / 12) - 1;
+  const npv = net.reduce((s, c, i) => s + c / Math.pow(1 + rm, i), 0);
+  const wrate = gdv / PLOT_TOTAL, be = preMkt / (PLOT_TOTAL * (1 - a.mkt));
+  return { seg, rate, gdv, land, build, common, util, sub, cont, fee, fixed, preMkt, mkt, tdc, profit,
+    margin: profit / gdv, roi: profit / tdc, irr, npv, peak: -minCum, peakM, payback, end: ls, fs, cs, ce,
+    em: (-minCum + profit) / -minCum, peakExLand: -minX, wrate, be, headroom: 1 - be / wrate,
+    overrun: profit / (sub * (1 + CONT + DEVFEE)), cum: cumArr, net, out, inn,
+    villas: VILLAS.map((vv, i) => { const price = vv[3] * rate[vv[2]]; const cost = VSHARE[i] * preMkt + a.mkt * price; return { no: vv[0], type: vv[1], seg: vv[2], plot: vv[3], rate: rate[vv[2]], price, cost, profit: price - cost }; }) };
+}
+function residualLandRate(a) { // max land rate for target ROI
+  const r = run(a); const other = r.preMkt - r.land;
+  const L = (r.gdv * (1 - a.mkt) - T_ROI * a.mkt * r.gdv) / (1 + T_ROI) - other;
+  return a.land * L / r.land;
+}
+// ---------- UI ----------
+const $ = id => document.getElementById(id);
+const KEYS = ["p1", "p2", "r", "cv", "land", "mkt", "dur", "lag", "abs"];
+const START = new Date(2026, 10, 1);
+const mDate = m => { const d = new Date(START); d.setMonth(d.getMonth() + m - 1); return d.toLocaleString("en-GB", { month: "short", year: "numeric" }); };
+const n0 = x => Math.round(x).toLocaleString("en-US");
+const mSAR = (x, d = 1) => (x < 0 ? "−" : "") + (Math.abs(x) / 1e6).toFixed(d);
+const pct = (x, d = 1) => isFinite(x) ? (x * 100).toFixed(d) + "%" : "n/a";
+const sgn = (x, d = 1) => (x > 0 ? "+" : x < 0 ? "−" : "±") + Math.abs(x * 100).toFixed(d) + "%";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const SEGC = { P1: "var(--p1)", P2: "var(--p2)", R: "var(--r)" };
+const SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs = {}, txt) { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (txt != null) e.textContent = txt; return e; }
+
+let state = { ...PRESETS.ml };
+let selVilla = 18, tMode = "profit";
+try { const s = JSON.parse(localStorage.getItem("laban28-r2-inputs") || "null"); if (s && typeof s.p1 === "number") state = { ...state, ...s, bfix: false }; } catch (e) {}
+const save = () => { try { localStorage.setItem("laban28-r2-inputs", JSON.stringify(state)); } catch (e) {} };
+
+const fmtIn = { p1: v => n0(v), p2: v => n0(v), r: v => n0(v), cv: v => sgn(v), land: v => n0(v), mkt: v => pct(v), dur: v => v + " mo", lag: v => v + " mo", abs: v => v + " mo" };
+
+function syncInputs() {
+  KEYS.forEach(k => { $(k).value = state[k]; $("o-" + k).textContent = fmtIn[k](state[k]); });
+}
+function matchPreset() {
+  for (const k of ["pess", "ml", "opt"]) {
+    const p = PRESETS[k];
+    if (KEYS.every(x => Math.abs(p[x] - state[x]) < 1e-9) && !!p.bfix === !!state.bfix) return k;
+  }
+  return null;
+}
+KEYS.forEach(k => $(k).addEventListener("input", e => { state[k] = parseFloat(e.target.value); $("o-" + k).textContent = fmtIn[k](state[k]); render(); }));
+document.querySelectorAll(".chip[data-p]").forEach(b => b.addEventListener("click", () => { state = { ...PRESETS[b.dataset.p] }; syncInputs(); render(); }));
+$("reset").addEventListener("click", () => { state = { ...PRESETS.ml }; syncInputs(); render(); });
+$("tm-profit").addEventListener("click", () => { tMode = "profit"; render(); });
+$("tm-irr").addEventListener("click", () => { tMode = "irr"; render(); });
+
+// ---------- site plan geometry (from HEXA proposed layout, approximate) ----------
+const RECTS = { 1: [385, 35, 52, 110], 2: [333, 35, 52, 110], 3: [280, 35, 53, 110], 4: [228, 35, 52, 110], 5: [175, 35, 53, 110], 6: [112, 35, 63, 110],
+  7: [28, 200, 117, 45], 28: [145, 200, 120, 45], 8: [28, 245, 117, 47], 9: [28, 292, 117, 46], 10: [28, 338, 117, 47],
+  26: [150, 250, 112, 42], 24: [150, 292, 112, 48], 22: [150, 340, 112, 45], 11: [28, 395, 117, 45], 20: [145, 395, 120, 45],
+  27: [318, 200, 119, 45], 25: [318, 250, 119, 42], 23: [318, 292, 119, 46], 21: [318, 338, 119, 47], 19: [318, 395, 119, 45],
+  12: [28, 490, 50, 125], 13: [78, 490, 47, 125], 14: [125, 490, 48, 125], 15: [173, 490, 48, 125], 16: [221, 490, 48, 125], 17: [269, 490, 46, 125], 18: [318, 488, 67, 122] };
+
+function drawPlanBase() {
+  const s = $("plan"); s.innerHTML = "";
+  s.appendChild(el("path", { d: "M22,140 Q24,26 118,24 L442,24 L442,622 L392,622 L392,646 L340,646 L340,622 L48,622 L22,596 Z", fill: "var(--road)", stroke: "var(--line)", "stroke-width": 1.5 }));
+  [[60, 160, 270, 26], [60, 448, 260, 30], [272, 200, 40, 185], [318, 448, 119, 10]].forEach(r => s.appendChild(el("rect", { x: r[0], y: r[1], width: r[2], height: r[3], fill: "var(--green)", rx: 3 })));
+  s.appendChild(el("rect", { x: 30, y: 60, width: 72, height: 70, fill: "var(--green)", rx: 3 }));
+  s.appendChild(el("text", { x: 66, y: 98, "text-anchor": "middle", class: "axis", style: "font-size:9px;fill:var(--muted)" }, "Elec. room"));
+  s.appendChild(el("rect", { x: 388, y: 460, width: 49, height: 160, fill: "var(--sunk)", stroke: "var(--line)" }));
+  s.appendChild(el("text", { x: 412, y: 545, "text-anchor": "middle", transform: "rotate(-90 412 545)", style: "font-size:10px;fill:var(--muted);font-family:var(--body);font-weight:700;letter-spacing:.08em" }, "BASEMENT RAMP"));
+  s.appendChild(el("text", { x: 366, y: 640, "text-anchor": "middle", style: "font-size:9px;fill:var(--muted);font-family:var(--body)" }, "Car exit / entrance"));
+  s.appendChild(el("text", { x: 190, y: 182, "text-anchor": "middle", style: "font-size:9px;fill:var(--muted);font-family:var(--body);letter-spacing:.1em" }, "INTERNAL ROAD"));
+  s.appendChild(el("text", { x: 190, y: 470, "text-anchor": "middle", style: "font-size:9px;fill:var(--muted);font-family:var(--body);letter-spacing:.1em" }, "INTERNAL ROAD"));
+  const g = el("g", { id: "villas" }); s.appendChild(g);
+  Object.entries(RECTS).forEach(([no, r]) => {
+    const v = VILLAS.find(x => x[0] == no);
+    const grp = el("g", { class: "villa", tabindex: 0, role: "button", "data-no": no, "aria-label": "Villa " + no });
+    grp.appendChild(el("rect", { x: r[0], y: r[1], width: r[2], height: r[3], rx: 3, fill: SEGC[v[2]] }));
+    const cx = r[0] + r[2] / 2, cy = r[1] + r[3] / 2;
+    if (r[2] > r[3]) { // landscape plot: two lines
+      grp.appendChild(el("text", { x: cx, y: cy - 4, "text-anchor": "middle", class: "vl1", style: "font-size:11px;font-weight:700" }, ""));
+      grp.appendChild(el("text", { x: cx, y: cy + 11, "text-anchor": "middle", class: "vl2 vs" }, ""));
+    } else { // portrait plot: four lines
+      [[-22, "vn", "font-size:12px;font-weight:700"], [-8, "va", ""], [8, "vc", ""], [21, "vpr", "font-weight:700"]].forEach(([dy, c, st]) =>
+        grp.appendChild(el("text", { x: cx, y: cy + dy, "text-anchor": "middle", class: c + (c === "vn" ? "" : " vs"), style: st }, "")));
+    }
+    grp.addEventListener("click", () => { selVilla = +no; render(); });
+    grp.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selVilla = +no; render(); } });
+    g.appendChild(grp);
+  });
+}
+
+// ---------- render ----------
+function render() {
+  save();
+  const pk = matchPreset();
+  ["pess", "ml", "opt"].forEach(k => $("pre-" + k).setAttribute("aria-pressed", pk === k));
+  $("pre-custom").setAttribute("aria-pressed", pk === null);
+  const R = run(state), base = run(PRESETS.ml);
+  const P = { pess: run(PRESETS.pess), ml: base, opt: run(PRESETS.opt) };
+
+  // verdict
+  let cls, head, txt;
+  const roiOk = R.roi >= T_ROI, irrOk = R.irr >= T_IRR;
+  if (R.profit <= 0) { cls = "bad"; head = "Loss-making"; txt = `The scheme loses SAR ${mSAR(-R.profit, 2)}m. Prices would need to average ${n0(R.be)} SAR/m² just to break even.`; }
+  else if (roiOk && irrOk) { cls = "good"; head = "Meets both targets"; txt = `Profit of SAR ${mSAR(R.profit, 2)}m on SAR ${mSAR(R.tdc, 1)}m cost, with ${pct(R.roi)} ROI and ${pct(R.irr)} IRR. Prices could fall ${pct(R.headroom, 0)} before the project makes a loss.`; }
+  else if (roiOk) { cls = "warn"; head = "Profitable, IRR below 15%"; txt = `ROI is ${pct(R.roi)}, but the annual return is ${pct(R.irr)}. The land is paid in month 1 and nothing is sold until month ${R.fs}. Paying for the land in stages or off-plan sales would close the gap.`; }
+  else { cls = "warn"; head = "Profitable, below 20% ROI"; txt = `Profit of SAR ${mSAR(R.profit, 2)}m is only ${pct(R.roi)} on cost. To reach 20% ROI the land price would need to fall to about ${n0(residualLandRate(state))} SAR/m², or selling prices would need to rise.`; }
+  $("verdict").innerHTML = `<span class="pill ${cls}">${head}</span><p>${txt}</p>`;
+
+  // KPIs
+  const dP = R.profit - base.profit;
+  const prices = R.villas.map(v => v.price), lo = Math.min(...prices), hi = Math.max(...prices);
+  const loV = R.villas.filter(v => Math.abs(v.price - lo) < 1), hiV = R.villas.filter(v => Math.abs(v.price - hi) < 1);
+  const vlist = arr => (arr.length > 1 ? "Villas " : "Villa ") + arr.map(v => v.no).join(", ") + " · " + arr[0].seg + " · " + arr[0].plot.toFixed(2) + " m²";
+  const k = [
+    ["Net profit · SAR", mSAR(R.profit, 2) + "m", `${Math.abs(dP) < 1 ? "Most Likely case" : `<b class="${dP > 0 ? "up" : "down"}">${dP > 0 ? "+" : "−"}${mSAR(Math.abs(dP), 2)}m</b> vs Most Likely`}`, "hero"],
+    ["ROI on cost", pct(R.roi), `Target 20% · <b class="${roiOk ? "up" : "down"}">${roiOk ? "met" : "missed"}</b>`],
+    ["Project IRR", pct(R.irr), `Target 15% · <b class="${irrOk ? "up" : "down"}">${irrOk ? "met" : "missed"}</b>`],
+    ["Peak equity · SAR", mSAR(R.peak, 2) + "m", `Including land · reached ${mDate(R.peakM)}`],
+    ["Peak equity excl. land · SAR", mSAR(R.peakExLand, 2) + "m", `Funding needed beyond the SAR ${mSAR(R.land, 2)}m land payment`],
+    ["Break-even price", n0(R.be), `SAR/m² plot · ${pct(R.headroom, 0)} headroom`],
+    ["Lowest villa price · SAR", mSAR(lo, 2) + "m", vlist(loV)],
+    ["Highest villa price · SAR", mSAR(hi, 2) + "m", vlist(hiV)],
+    ["Payback", R.payback ? mDate(R.payback) : "n/a", `Month ${R.payback || "–"} · ${R.em.toFixed(2)}× equity multiple`],
+  ];
+  $("kpis").innerHTML = k.map(x => `<div class="kpi ${x[3] || ""}"><span class="k">${x[0]}</span><span class="v">${x[1]}</span><span class="d">${x[2]}</span></div>`).join("");
+
+  ["P1", "P2", "R"].forEach(s => { $("h-" + s).textContent = `${R.seg[s].n} villas · ${R.seg[s].area.toLocaleString("en-US", { maximumFractionDigits: 2 })} m²` + (s === "R" ? " · Laban market today ≈ 15,000" : ""); });
+  // plan
+  document.querySelectorAll("#villas .villa").forEach(g => {
+    const v = R.villas.find(x => x.no == g.dataset.no);
+    const C = (v.cost / 1e6).toFixed(2), Pp = (v.price / 1e6).toFixed(2), Ar = v.plot.toFixed(2) + " m²";
+    const q_ = c => g.querySelector("." + c);
+    if (q_("vl1")) { q_("vl1").textContent = v.no + " · " + Ar; q_("vl2").textContent = "C " + C + " · P " + Pp; }
+    else { q_("vn").textContent = v.no; q_("va").textContent = v.plot.toFixed(1) + "m²"; q_("vc").textContent = "C " + C; q_("vpr").textContent = "P " + Pp; }
+    g.classList.toggle("sel", +g.dataset.no === selVilla);
+  });
+  const sv = R.villas.find(x => x.no === selVilla);
+  $("vdetail").innerHTML = `<div><span>Villa</span><b>${sv.no} · type ${sv.type} · ${sv.seg}</b></div><div><span>Plot</span><b>${sv.plot.toFixed(2)} m²</b></div><div><span>Price</span><b>SAR ${n0(sv.price)}</b></div><div><span>Cost</span><b>SAR ${n0(sv.cost)}</b></div><div><span>Profit</span><b class="${sv.profit >= 0 ? "up" : "down"}">SAR ${n0(sv.profit)}</b></div><div><span>Margin</span><b>${pct(sv.profit / sv.price)}</b></div>`;
+
+  // bridge
+  const B = [["Sales value (GDV)", R.gdv, "in"], ["Land + 5% RETT", R.land], ["Construction (villas, basement, common)", R.sub], ["Contingency + JAK fee", R.cont + R.fee], ["Design, supervision, permits, insurance", R.fixed], ["Marketing & commission", R.mkt], ["Net profit", R.profit, "out"]];
+  let run_ = R.gdv; const max = R.gdv;
+  $("bridge").innerHTML = B.map(([lab, val, t]) => {
+    let left, w, col;
+    if (t === "in") { left = 0; w = val; col = "var(--navy)"; }
+    else if (t === "out") { left = Math.min(0, val); w = Math.abs(val); col = val >= 0 ? "var(--good)" : "var(--bad)"; }
+    else { run_ -= val; left = run_; w = val; col = "var(--slate)"; }
+    return `<div class="bridge-row"><span class="lab">${lab}</span><span class="bar"><i style="left:${Math.max(0, left / max * 100)}%;width:${w / max * 100}%;background:${col}"></i></span><span class="val num">${t ? "" : "−"}${mSAR(val, 2)}</span></div>`;
+  }).join("");
+
+  // segment table
+  const segs = [["P1", "Corner + main road"], ["P2", "Main road"], ["R", "Regular"]];
+  $("segtbl").innerHTML = `<thead><tr><th>Segment</th><th>Units</th><th>Plot m²</th><th>SAR/m²</th><th>GDV (m)</th><th>Share</th></tr></thead><tbody>` +
+    segs.map(([s, d]) => `<tr><td><span class="segdot" style="background:${SEGC[s]}"></span>${s} · ${d}</td><td>${R.seg[s].n}</td><td>${n0(R.seg[s].area)}</td><td>${n0(R.rate[s])}</td><td>${mSAR(R.seg[s].gdv, 2)}</td><td>${pct(R.seg[s].gdv / R.gdv, 0)}</td></tr>`).join("") +
+    `<tr class="tot"><td>Total</td><td>28</td><td>${n0(PLOT_TOTAL)}</td><td>${n0(R.wrate)}</td><td>${mSAR(R.gdv, 2)}</td><td>100%</td></tr></tbody>`;
+  const prem = R.gdv - PLOT_TOTAL * MARKET;
+  $("premnote").textContent = `Compared with selling every plot at the 15,000 SAR/m² market rate, the current prices ${prem >= 0 ? "add" : "lose"} SAR ${mSAR(Math.abs(prem), 2)}m, which is ${R.profit > 0 ? pct(Math.abs(prem) / R.profit, 0) + " of net profit" : "significant"}. P1 and P2 together make up ${pct((R.seg.P1.gdv + R.seg.P2.gdv) / R.gdv, 0)} of sales value.`;
+
+  drawJ(R, P); drawCmp(R, P); drawTornado(R); drawGrid(); drawVillas(R);
+}
+
+function drawJ(R, P) {
+  const s = $("jcurve"); s.innerHTML = "";
+  const W = 760, H = 290, L = 54, Rr = 16, T = 14, Bm = 30;
+  const series = [{ k: "Pessimistic", r: P.pess, c: "var(--coral)", dash: "5 4" }, { k: "Most Likely", r: P.ml, c: "var(--slate)", dash: "5 4" }, { k: "Optimistic", r: P.opt, c: "var(--good)", dash: "5 4" }, { k: "Current case", r: R, c: "var(--navy)", w: 3 }];
+  const maxM = Math.min(72, Math.max(...series.map(x => x.r.end)) + 3);
+  const all = series.flatMap(x => x.r.cum.slice(0, maxM));
+  let lo = Math.min(...all), hi = Math.max(...all);
+  const step = 10e6; lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+  const x = m => L + (m - 1) / (maxM - 1) * (W - L - Rr), y = v => T + (hi - v) / (hi - lo) * (H - T - Bm);
+  for (let v = lo; v <= hi; v += step) {
+    s.appendChild(el("line", { x1: L, x2: W - Rr, y1: y(v), y2: y(v), class: v === 0 ? "zero" : "grid" }));
+    s.appendChild(el("text", { x: L - 8, y: y(v) + 4, "text-anchor": "end", class: "axis" }, (v / 1e6).toFixed(0) + "m"));
+  }
+  for (let m = 1; m <= maxM; m += 6) s.appendChild(el("text", { x: x(m), y: H - 10, "text-anchor": "middle", class: "axis" }, mDate(m).replace(" 20", " ’")));
+  // phase bands for current case
+  s.appendChild(el("rect", { x: x(R.cs), y: T, width: x(R.ce) - x(R.cs), height: H - T - Bm, fill: "var(--sunk)", opacity: .7 }));
+  s.appendChild(el("text", { x: (x(R.cs) + x(R.ce)) / 2, y: T + 14, "text-anchor": "middle", class: "axis" }, "Construction"));
+  s.appendChild(el("text", { x: (x(R.fs) + x(R.end)) / 2, y: T + 14, "text-anchor": "middle", class: "axis" }, "Sales"));
+  series.forEach(se => {
+    const d = se.r.cum.slice(0, maxM).map((v, i) => (i ? "L" : "M") + x(i + 1).toFixed(1) + "," + y(v).toFixed(1)).join("");
+    s.appendChild(el("path", { d, fill: "none", stroke: se.c, "stroke-width": se.w || 1.6, "stroke-dasharray": se.dash || "", "stroke-linejoin": "round" }));
+  });
+  const mi = R.cum.indexOf(Math.min(...R.cum));
+  s.appendChild(el("circle", { cx: x(mi + 1), cy: y(R.cum[mi]), r: 4.5, fill: "var(--navy)", stroke: "var(--surface)", "stroke-width": 2 }));
+  s.appendChild(el("text", { x: x(mi + 1) + 8, y: y(R.cum[mi]) + 14, class: "axis", style: "font-weight:700;fill:var(--navy)" }, "Peak equity " + mSAR(-R.cum[mi], 1) + "m"));
+  const fin = R.cum[maxM - 1];
+  s.appendChild(el("text", { x: W - Rr, y: y(fin) + 16, "text-anchor": "end", class: "axis", style: "font-weight:700;fill:var(--navy)" }, "Profit " + mSAR(fin, 1) + "m"));
+  const guide = el("line", { y1: T, y2: H - Bm, stroke: "var(--ink)", "stroke-width": 1, opacity: 0 }); s.appendChild(guide);
+  const hit = el("rect", { x: L, y: T, width: W - L - Rr, height: H - T - Bm, fill: "transparent" }); s.appendChild(hit);
+  const move = e => {
+    const pt = s.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+    const p = pt.matrixTransform(s.getScreenCTM().inverse());
+    const m = Math.max(1, Math.min(maxM, Math.round((p.x - L) / (W - L - Rr) * (maxM - 1) + 1)));
+    guide.setAttribute("x1", x(m)); guide.setAttribute("x2", x(m)); guide.setAttribute("opacity", .35);
+    $("jtt").innerHTML = `<b>${mDate(m)}</b> (month ${m}) · current <b>${mSAR(R.cum[m - 1], 2)}m</b> · net this month <b>${mSAR(R.net[m - 1], 2)}m</b> · Pess ${mSAR(P.pess.cum[m - 1], 1)}m · ML ${mSAR(P.ml.cum[m - 1], 1)}m · Opt ${mSAR(P.opt.cum[m - 1], 1)}m`;
+  };
+  hit.addEventListener("pointermove", move); hit.addEventListener("pointerdown", move);
+}
+
+function drawCmp(R, P) {
+  const cols = [["Pessimistic", P.pess, PRESETS.pess], ["Most Likely", P.ml, PRESETS.ml], ["Optimistic", P.opt, PRESETS.opt], ["Current case", R, state]];
+  const rows = [
+    ["Construction cost (buildings + common works)", (r, a) => `${mSAR(r.sub, 2)} <span class="sub">(${sgn(a.cv)})</span>`],
+    ["Sell-out period", (r, a) => `${a.abs} months`],
+    ["Sales value (GDV)", r => mSAR(r.gdv, 2)],
+    ["Total cost", r => mSAR(r.tdc, 2)],
+    ["Net profit", r => `<b>${mSAR(r.profit, 2)}</b>`],
+    ["Margin on GDV", r => pct(r.margin)],
+    ["ROI on cost", r => `<span class="${r.roi >= T_ROI ? "up" : "down"}">${pct(r.roi)}</span>`],
+    ["Project IRR", r => `<span class="${r.irr >= T_IRR ? "up" : "down"}">${pct(r.irr)}</span>`],
+  ];
+  $("cmp").innerHTML = `<thead><tr><th>Metric</th>${cols.map((c, i) => `<th class="${i === 3 ? "you" : ""}">${c[0]}</th>`).join("")}</tr></thead><tbody>` +
+    rows.map(([lab, f]) => `<tr><td>${lab}</td>${cols.map((c, i) => `<td class="${i === 3 ? "you" : ""}">${f(c[1], c[2])}</td>`).join("")}</tr>`).join("") + "</tbody>";
+}
+
+function drawTornado(R) {
+  $("tm-profit").setAttribute("aria-pressed", tMode === "profit"); $("tm-irr").setAttribute("aria-pressed", tMode === "irr");
+  const cases = [["Selling price ±10%", { pf: -.1 }, { pf: .1 }], ["Construction cost ±10%", { cf: .1 }, { cf: -.1 }], ["Land cost ±10%", { lf: .1 }, { lf: -.1 }],
+    ["Sell-out 12 vs 4 months", { abs: 12 }, { abs: 4 }], ["Sales delayed 6 months", { delay: 6 }, {}]];
+  const val = r => tMode === "profit" ? r.profit - R.profit : (r.irr - R.irr) * 100;
+  const data = cases.map(([l, d, u]) => [l, val(run(state, d)), val(run(state, u))]).sort((a, b) => (Math.abs(b[2] - b[1])) - (Math.abs(a[2] - a[1])));
+  const s = $("tornado"); s.innerHTML = "";
+  const W = 520, L = 160, Rr = 14, T = 10, rowH = 40;
+  const mx = Math.max(...data.flatMap(d => [Math.abs(d[1]), Math.abs(d[2])])) || 1;
+  const cx = L + (W - L - Rr) / 2, sc = (W - L - Rr) / 2 / mx;
+  s.appendChild(el("line", { x1: cx, x2: cx, y1: T, y2: T + rowH * data.length, class: "zero" }));
+  const f = v => tMode === "profit" ? (v > 0 ? "+" : v < 0 ? "−" : "") + (Math.abs(v) / 1e6).toFixed(1) + "m" : (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(1) + " pp";
+  data.forEach(([lab, dn, up], i) => {
+    const yy = T + i * rowH + 8;
+    s.appendChild(el("text", { x: 0, y: yy + 15, class: "axis", style: "font-size:12px;fill:var(--ink)" }, lab));
+    [[dn, "var(--coral)"], [up, "var(--navy)"]].forEach(([v, c]) => {
+      if (Math.abs(v) < 1e-9) return;
+      const x0 = v < 0 ? cx + v * sc : cx;
+      s.appendChild(el("rect", { x: x0, y: yy, width: Math.max(1, Math.abs(v) * sc), height: 22, fill: c, rx: 2 }));
+      const tx = v < 0 ? x0 - 4 : x0 + Math.abs(v) * sc + 4;
+      const inside = Math.abs(v) * sc > 70;
+      s.appendChild(el("text", { x: inside ? (v < 0 ? x0 + 6 : x0 + Math.abs(v) * sc - 6) : tx, y: yy + 15, "text-anchor": inside ? (v < 0 ? "start" : "end") : (v < 0 ? "end" : "start"), class: "axis", style: `font-weight:700;${inside ? "fill:#fff" : ""}` }, f(v)));
+    });
+    if (Math.abs(dn) < 1e-9 && Math.abs(up) < 1e-9) s.appendChild(el("text", { x: cx + 6, y: yy + 15, class: "axis" }, "no effect on profit"));
+  });
+  s.setAttribute("viewBox", `0 0 ${W} ${T + rowH * data.length + 4}`);
+}
+
+function drawGrid() {
+  const pr = [-.1, -.05, 0, .05, .1], ab = [3, 6, 9, 12, 18];
+  let h = `<div class="h"></div>` + ab.map(a => `<div class="h">${a} mo</div>`).join("");
+  pr.forEach(p => {
+    h += `<div class="rh">${p === 0 ? "Current" : (p > 0 ? "+" : "−") + Math.abs(p * 100) + "%"}</div>`;
+    ab.forEach(a => {
+      const v = run(state, { pf: p, abs: a }).irr;
+      const t = Math.max(-1, Math.min(1, (v - T_IRR) / 0.12));
+      const bg = t >= 0 ? `color-mix(in srgb, var(--navy) ${Math.round(18 + t * 70)}%, var(--surface))` : `color-mix(in srgb, var(--coral) ${Math.round(18 - t * 60)}%, var(--surface))`;
+      const fg = Math.abs(t) > .5 ? "#fff" : "var(--ink)";
+      h += `<div class="c ${p === 0 && a === state.abs ? "base" : ""}" style="background:${bg};color:${fg}">${pct(v)}</div>`;
+    });
+  });
+  $("irrgrid").innerHTML = h;
+}
+
+function drawVillas(R) {
+  $("vtbl").innerHTML = `<thead><tr><th>Villa</th><th>Type</th><th>Segment</th><th>Plot m²</th><th>SAR/m²</th><th>Price</th><th>Cost</th><th>Profit</th><th>Margin</th></tr></thead><tbody>` +
+    R.villas.map(v => `<tr><td>${v.no}</td><td>${v.type}</td><td><span class="segdot" style="background:${SEGC[v.seg]}"></span>${v.seg}</td><td>${v.plot.toFixed(2)}</td><td>${n0(v.rate)}</td><td>${n0(v.price)}</td><td>${n0(v.cost)}</td><td class="${v.profit >= 0 ? "" : "down"}">${n0(v.profit)}</td><td>${pct(v.profit / v.price)}</td></tr>`).join("") +
+    `<tr class="tot"><td>Total</td><td></td><td></td><td>${PLOT_TOTAL.toFixed(2)}</td><td>${n0(R.wrate)}</td><td>${n0(R.gdv)}</td><td>${n0(R.tdc)}</td><td>${n0(R.profit)}</td><td>${pct(R.margin)}</td></tr></tbody>`;
+}
+
+drawPlanBase(); syncInputs(); render();
+</script>
+
+</body></html>
